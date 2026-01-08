@@ -1,0 +1,865 @@
+/* ==========================================================================
+   JUNGLE RESET SOCIETY — DESIGN SYSTEM & STYLES
+   Cinematic immersive journey with scene-based scroll architecture
+   ========================================================================== */
+
+/* ==========================================================================
+   DESIGN TOKENS
+   ========================================================================== */
+
+:root {
+  /* Colors — Golden Hour Palette */
+  --color-jungle-black: #0a0f0d;
+  --color-jungle-dark: #1a2520;
+  --color-jungle-mid: #2d4436;
+  --color-gold: #c9a961;
+  --color-gold-light: #d4c5aa;
+  --color-sand: #f5ede0;
+  --color-white: #fafaf8;
+  --color-mist: rgba(250, 250, 248, 0.03);
+  --color-overlay: rgba(10, 15, 13, 0.6);
+  
+  /* Typography */
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'Inter', sans-serif;
+  
+  --font-size-xs: 0.75rem;      /* 12px */
+  --font-size-sm: 0.875rem;     /* 14px */
+  --font-size-base: 1rem;        /* 16px */
+  --font-size-lg: 1.125rem;      /* 18px */
+  --font-size-xl: 1.5rem;        /* 24px */
+  --font-size-2xl: 2rem;         /* 32px */
+  --font-size-3xl: 3rem;         /* 48px */
+  --font-size-4xl: 4rem;         /* 64px */
+  --font-size-5xl: 5rem;         /* 80px */
+  --font-size-6xl: 6rem;         /* 96px */
+  
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  --line-height-tight: 1.1;
+  --line-height-snug: 1.3;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.7;
+  
+  /* Spacing — 8px grid */
+  --space-xs: 0.5rem;   /* 8px */
+  --space-sm: 1rem;     /* 16px */
+  --space-md: 2rem;     /* 32px */
+  --space-lg: 4rem;     /* 64px */
+  --space-xl: 6rem;     /* 96px */
+  --space-2xl: 10rem;   /* 160px */
+  --space-3xl: 15rem;   /* 240px */
+  
+  /* Animation Curves */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Transitions */
+  --duration-fast: 200ms;
+  --duration-normal: 400ms;
+  --duration-slow: 600ms;
+  --duration-slower: 1000ms;
+  
+  /* Z-index layers */
+  --z-grain: 9999;
+  --z-nav: 1000;
+  --z-portal: 500;
+  --z-content: 100;
+  --z-layer-top: 50;
+  --z-layer-mid: 30;
+  --z-layer-bg: 10;
+  
+  /* Viewport units for mobile */
+  --vh: 1vh;
+}
+
+/* ==========================================================================
+   RESET & BASE
+   ========================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-sand);
+  background-color: var(--color-jungle-black);
+  overflow-x: hidden;
+}
+
+/* Smooth scroll handled by Lenis */
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   TYPOGRAPHY
+   ========================================================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-tight);
+  color: var(--color-white);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-normal) var(--ease-smooth);
+}
+
+a:hover, a:focus {
+  color: var(--color-gold);
+}
+
+/* ==========================================================================
+   ACCESSIBILITY
+   ========================================================================== */
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--color-gold);
+  color: var(--color-jungle-black);
+  padding: var(--space-sm) var(--space-md);
+  z-index: 10000;
+  font-weight: var(--font-weight-semibold);
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .scene__layer {
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   GRAIN OVERLAY
+   ========================================================================== */
+
+.grain-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: var(--z-grain);
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  mix-blend-mode: soft-light;
+}
+
+/* ==========================================================================
+   NAVIGATION
+   ========================================================================== */
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: var(--z-nav);
+  background: linear-gradient(180deg, rgba(10, 15, 13, 0.9) 0%, rgba(10, 15, 13, 0) 100%);
+  backdrop-filter: blur(10px);
+}
+
+.nav__logo-text {
+  font-family: var(--font-display);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-white);
+  letter-spacing: 0.02em;
+}
+
+.nav__actions {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+.nav__lang-toggle {
+  background: none;
+  border: none;
+  color: var(--color-sand);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: color var(--duration-normal) var(--ease-smooth);
+  display: flex;
+  gap: 0.25rem;
+}
+
+.nav__lang-toggle:hover {
+  color: var(--color-gold);
+}
+
+.nav__lang-current {
+  color: var(--color-white);
+  font-weight: var(--font-weight-semibold);
+}
+
+.nav__lang-divider {
+  opacity: 0.5;
+}
+
+.nav__cta {
+  padding: var(--space-xs) var(--space-md);
+  background: var(--color-gold);
+  color: var(--color-jungle-black);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  border-radius: 2px;
+  transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+.nav__cta:hover, .nav__cta:focus {
+  background: var(--color-gold-light);
+  color: var(--color-jungle-black);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   SCENE BASE
+   ========================================================================== */
+
+.scene {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.scene__layers {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.scene__layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: transform;
+}
+
+.scene__content {
+  position: relative;
+  z-index: var(--z-content);
+  max-width: 1400px;
+  width: 100%;
+  padding: 0 var(--space-lg);
+  text-align: center;
+}
+
+.scene__content--wide {
+  max-width: 1600px;
+}
+
+.scene__content--centered {
+  max-width: 900px;
+}
+
+.scene__content--minimal {
+  max-width: 600px;
+}
+
+.scene__title {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--space-md);
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1s var(--ease-out-expo) forwards;
+}
+
+.scene__title--hero {
+  font-size: clamp(var(--font-size-3xl), 8vw, var(--font-size-6xl));
+  line-height: var(--line-height-tight);
+  margin-bottom: var(--space-lg);
+}
+
+.scene__title--section {
+  font-size: clamp(var(--font-size-2xl), 5vw, var(--font-size-4xl));
+  margin-bottom: var(--space-xl);
+}
+
+.scene__subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-gold-light);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s var(--ease-out-expo) 0.2s forwards;
+}
+
+.scene__description {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-gold-light);
+  margin-bottom: var(--space-lg);
+}
+
+.scene__label {
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-gold);
+  opacity: 0;
+  animation: fadeIn 1s var(--ease-smooth) 0.5s forwards;
+}
+
+.scene__note {
+  margin-top: var(--space-lg);
+  font-size: var(--font-size-sm);
+  color: var(--color-gold-light);
+  opacity: 0.7;
+}
+
+.scene__guarantee {
+  margin-top: var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-gold-light);
+  opacity: 0.7;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   SCENE 1: CANOPY
+   ========================================================================== */
+
+.scene--canopy {
+  background: linear-gradient(180deg, var(--color-jungle-black) 0%, var(--color-jungle-dark) 100%);
+}
+
+.scene--canopy .scene__layer--bg {
+  opacity: 0.8;
+  filter: brightness(0.7);
+}
+
+.scene--canopy .scene__layer--foliage-left,
+.scene--canopy .scene__layer--foliage-right {
+  background-image: url('../assets/jungle-layers-master.png');
+  background-size: cover;
+  background-position: center;
+  z-index: var(--z-layer-top);
+}
+
+.scene--canopy .scene__layer--foliage-left {
+  clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+}
+
+.scene--canopy .scene__layer--foliage-right {
+  clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+}
+
+.scene--canopy .scene__layer--mist {
+  background: radial-gradient(circle at center, transparent 0%, rgba(250, 250, 248, 0.05) 50%, transparent 100%);
+  z-index: calc(var(--z-layer-top) + 1);
+  mix-blend-mode: screen;
+}
+
+/* ==========================================================================
+   SCENE 2: PATH
+   ========================================================================== */
+
+.scene--path {
+  background: linear-gradient(180deg, var(--color-jungle-dark) 0%, var(--color-jungle-mid) 100%);
+}
+
+.scene--path .scene__layer--path-bg {
+  background: linear-gradient(180deg, transparent 0%, rgba(26, 37, 32, 0.9) 100%);
+}
+
+.scene--path .scene__layer--villa-far {
+  background-image: url('../assets/jungle-layers-master.png');
+  background-size: 80%;
+  background-position: center;
+  opacity: 0.3;
+  filter: blur(2px);
+}
+
+/* ==========================================================================
+   SCENE 3: APPROACH
+   ========================================================================== */
+
+.scene--approach {
+  background-color: var(--color-jungle-mid);
+}
+
+.scene--approach .scene__layer--villa-close {
+  background-image: url('https://premium-muaythai.com/wp-content/uploads/2024/11/BanSuriya_LipaNoi_Samui_01_MainPhoto_-_Ban_Suriya_-_Samui_-_Thailand-1024x482.webp');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.9;
+}
+
+/* ==========================================================================
+   SCENE 4: ENTRANCE
+   ========================================================================== */
+
+.scene--entrance {
+  background-color: var(--color-jungle-black);
+}
+
+.scene__portal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: var(--z-portal);
+}
+
+.scene__portal-mask {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at center, transparent 0%, var(--color-jungle-black) 60%);
+}
+
+/* ==========================================================================
+   SCENE 5: PROGRAM
+   ========================================================================== */
+
+.scene--program {
+  background: linear-gradient(180deg, var(--color-jungle-black) 0%, var(--color-jungle-mid) 100%);
+  min-height: 120vh;
+  padding: var(--space-2xl) 0;
+}
+
+.program-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+.program-card {
+  padding: var(--space-lg);
+  background: rgba(45, 68, 54, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(201, 169, 97, 0.1);
+  border-radius: 4px;
+  transition: all var(--duration-normal) var(--ease-smooth);
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.program-card:hover {
+  background: rgba(45, 68, 54, 0.5);
+  border-color: rgba(201, 169, 97, 0.3);
+  transform: translateY(-4px);
+}
+
+.program-card__title {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--space-sm);
+  color: var(--color-gold);
+}
+
+.program-card__description {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-sand);
+  opacity: 0.9;
+}
+
+/* ==========================================================================
+   SCENE 6: TRANSFORMATION (HORIZONTAL SCROLL)
+   ========================================================================== */
+
+.scene--transformation {
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  background: linear-gradient(90deg, 
+    var(--color-jungle-black) 0%, 
+    var(--color-jungle-mid) 50%, 
+    var(--color-jungle-dark) 100%);
+}
+
+.transformation {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.transformation__track {
+  display: flex;
+  height: 100%;
+  will-change: transform;
+}
+
+.transformation__panel {
+  flex: none;
+  width: 100vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  text-align: center;
+}
+
+.transformation__phase {
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-gold);
+  margin-bottom: var(--space-md);
+}
+
+.transformation__title {
+  font-size: clamp(var(--font-size-3xl), 6vw, var(--font-size-5xl));
+  margin-bottom: var(--space-lg);
+  color: var(--color-white);
+}
+
+.transformation__description {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-sand);
+  max-width: 600px;
+  opacity: 0.9;
+}
+
+/* ==========================================================================
+   SCENE 7: PACKAGES
+   ========================================================================== */
+
+.scene--packages {
+  background: linear-gradient(180deg, var(--color-jungle-dark) 0%, var(--color-jungle-black) 100%);
+  min-height: 120vh;
+  padding: var(--space-2xl) 0;
+}
+
+.packages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: var(--space-xl);
+  margin-top: var(--space-xl);
+}
+
+.package {
+  padding: var(--space-xl);
+  background: rgba(45, 68, 54, 0.2);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(201, 169, 97, 0.2);
+  border-radius: 4px;
+  transition: all var(--duration-slow) var(--ease-out-expo);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.package::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(201, 169, 97, 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-smooth);
+}
+
+.package:hover::before {
+  opacity: 1;
+}
+
+.package:hover {
+  border-color: var(--color-gold);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(201, 169, 97, 0.2);
+}
+
+.package__name {
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--space-sm);
+  color: var(--color-gold);
+}
+
+.package__duration {
+  font-size: var(--font-size-base);
+  color: var(--color-gold-light);
+  margin-bottom: var(--space-md);
+  opacity: 0.8;
+}
+
+.package__price {
+  font-size: var(--font-size-4xl);
+  font-family: var(--font-display);
+  color: var(--color-white);
+  margin: var(--space-lg) 0;
+}
+
+.package__description {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-sand);
+  margin-bottom: var(--space-lg);
+  opacity: 0.9;
+}
+
+.package__select {
+  width: 100%;
+  padding: var(--space-sm);
+  background: var(--color-gold);
+  color: var(--color-jungle-black);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-smooth);
+  font-family: var(--font-body);
+}
+
+.package__select:hover, .package__select:focus {
+  background: var(--color-gold-light);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   SCENE 8: CTA
+   ========================================================================== */
+
+.scene--cta {
+  background: linear-gradient(180deg, var(--color-jungle-black) 0%, var(--color-jungle-dark) 100%);
+  min-height: 100vh;
+}
+
+.cta-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: var(--space-xl);
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+.btn {
+  display: inline-block;
+  padding: var(--space-sm) var(--space-lg);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-smooth);
+  text-decoration: none;
+}
+
+.btn--primary {
+  background: var(--color-gold);
+  color: var(--color-jungle-black);
+}
+
+.btn--primary:hover, .btn--primary:focus {
+  background: var(--color-gold-light);
+  color: var(--color-jungle-black);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(201, 169, 97, 0.3);
+}
+
+.btn--secondary {
+  background: transparent;
+  color: var(--color-gold);
+  border: 2px solid var(--color-gold);
+}
+
+.btn--secondary:hover, .btn--secondary:focus {
+  background: rgba(201, 169, 97, 0.1);
+  border-color: var(--color-gold-light);
+  color: var(--color-gold-light);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+
+.footer {
+  background: var(--color-jungle-black);
+  padding: var(--space-2xl) var(--space-lg) var(--space-lg);
+  border-top: 1px solid rgba(201, 169, 97, 0.1);
+}
+
+.footer__content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-xl);
+  max-width: 1400px;
+  margin: 0 auto var(--space-xl);
+}
+
+.footer__title {
+  font-size: var(--font-size-lg);
+  font-family: var(--font-display);
+  color: var(--color-white);
+  margin-bottom: var(--space-sm);
+}
+
+.footer__heading {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gold);
+  margin-bottom: var(--space-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: var(--font-body);
+}
+
+.footer__text {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-sand);
+  opacity: 0.8;
+}
+
+.footer__text a {
+  color: var(--color-sand);
+  transition: color var(--duration-normal) var(--ease-smooth);
+}
+
+.footer__text a:hover {
+  color: var(--color-gold);
+}
+
+.footer__bottom {
+  text-align: center;
+  padding-top: var(--space-lg);
+  border-top: 1px solid rgba(201, 169, 97, 0.1);
+}
+
+.footer__copy {
+  font-size: var(--font-size-sm);
+  color: var(--color-sand);
+  opacity: 0.6;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  :root {
+    --space-lg: 2rem;
+    --space-xl: 4rem;
+    --space-2xl: 6rem;
+  }
+  
+  .nav {
+    padding: var(--space-sm) var(--space-md);
+  }
+  
+  .nav__logo-text {
+    font-size: var(--font-size-base);
+  }
+  
+  .scene__content {
+    padding: 0 var(--space-md);
+  }
+  
+  .program-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+  
+  .packages {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+  
+  .cta-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+  
+  .footer__content {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+}
